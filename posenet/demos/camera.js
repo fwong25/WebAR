@@ -18,7 +18,7 @@ import * as posenet from '@tensorflow-models/posenet';
 import dat from 'dat.gui';
 import Stats from 'stats.js';
 
-import {drawBoundingBox, drawKeypoints, drawSkeleton} from './demo_util';
+import {drawBoundingBox, drawKeypoints, drawSkeleton, drawKeypoint} from './demo_util';
 
 const videoWidth = 600;
 const videoHeight = 500;
@@ -94,8 +94,8 @@ const guiState = {
   },
   output: {
     showVideo: true,
-    showSkeleton: true,
-    showPoints: true,
+    showSkeleton: false,
+    showPoints: false,
     showBoundingBox: false,
   },
   net: null,
@@ -263,7 +263,10 @@ function detectPoseInRealTime(video, net) {
     // and draw the resulting skeleton and keypoints if over certain confidence
     // scores
     poses.forEach(({score, keypoints}) => {
+
       if (score >= minPoseConfidence) {
+        drawKeypoint(9, keypoints, minPartConfidence, ctx); //Left Wrist: id=9
+        drawKeypoint(10, keypoints, minPartConfidence, ctx); //Right Wrist: id=10
         if (guiState.output.showPoints) {
           drawKeypoints(keypoints, minPartConfidence, ctx);
         }

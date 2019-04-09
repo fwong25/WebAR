@@ -17,9 +17,16 @@
 import * as posenet from '@tensorflow-models/posenet';
 import * as tf from '@tensorflow/tfjs';
 
-const color = 'aqua';
+const color = 'aquamarine';
 const boundingBoxColor = 'red';
 const lineWidth = 2;
+//added by me
+var right_wrist_pos = [0];
+var right_wrist_continuous = false;
+var right_wrist_continuous_count = 0;
+var left_wrist_pos = [0];
+var left_wrist_continuous = false;
+var left_wrist_continuous_count = 0;
 
 function toTuple({y, x}) {
   return [y, x];
@@ -71,6 +78,74 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
 
     const {y, x} = keypoint.position;
     drawPoint(ctx, y * scale, x * scale, 3, color);
+  }
+}
+
+export function drawKeypoint(id, keypoints, minConfidence, ctx, scale = 1) {
+
+  var keypoint = keypoints[id];
+  if(id == 9) 
+  {
+    if(!left_wrist_continuous)
+      while(left_wrist_pos.length > 0)
+        left_wrist_pos.pop();
+    else if(left_wrist_pos.length > 20)
+      left_wrist_pos.shift();
+
+    if (keypoint.score >= minConfidence) {
+      left_wrist_pos.push(keypoint);
+      left_wrist_continuous = true;
+      left_wrist_continuous_count = 0;
+    }
+    else
+    {
+      ++left_wrist_continuous_count;
+      if(left_wrist_continuous_count > 5)
+      {
+        left_wrist_continuous_count = 0;
+        left_wrist_continuous = false;
+      }
+    }
+
+    for (let i = 0; i < left_wrist_pos.length; i++) {
+      keypoint = left_wrist_pos[i];
+      const {y, x} = keypoint.position;
+      drawPoint(ctx, y * scale, x * scale, 5, 'cornflowerblue');
+    }
+  }
+  else if(id == 10)
+  {
+    if(!right_wrist_continuous)
+      while(right_wrist_pos.length > 0)
+        right_wrist_pos.pop();
+    else if(right_wrist_pos.length > 20)
+      right_wrist_pos.shift();
+
+    if (keypoint.score >= minConfidence) {
+      right_wrist_pos.push(keypoint);
+      right_wrist_continuous = true;
+      right_wrist_continuous_count = 0;
+    }
+    else
+    {
+      ++right_wrist_continuous_count;
+      if(right_wrist_continuous_count > 5)
+      {
+        right_wrist_continuous_count = 0;
+        right_wrist_continuous = false;
+      }
+    }
+
+    for (let i = 0; i < right_wrist_pos.length; i++) {
+      keypoint = right_wrist_pos[i];
+      const {y, x} = keypoint.position;
+      drawPoint(ctx, y * scale, x * scale, 5, 'lightpink');
+    }
+  }
+  else
+  {
+    const {y, x} = keypoint.position;
+    drawPoint(ctx, y * scale, x * scale, 5, color);
   }
 }
 
