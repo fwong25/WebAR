@@ -82,7 +82,7 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
 }
 
 export function drawKeypoint(id, keypoints, minConfidence, ctx, scale = 1) {
-
+  //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 20);
   var keypoint = keypoints[id];
   if(id == 9) 
   {
@@ -147,6 +147,49 @@ export function drawKeypoint(id, keypoints, minConfidence, ctx, scale = 1) {
     const {y, x} = keypoint.position;
     drawPoint(ctx, y * scale, x * scale, 5, color);
   }
+}
+
+export function checkPoseY(keypoints, minConfidence, ctx, scale = 1)
+{
+    const keypointRightWrist = keypoints[9];
+    const keypointLeftWrist = keypoints[10];
+    const keypointRightShoulder = keypoints[5];
+
+    if (keypointLeftWrist.score < minConfidence) {
+      return;
+    }
+    if (keypointRightWrist.score < minConfidence) {
+      return;
+    }
+    if (keypointRightShoulder.score < minConfidence) {
+      return;
+    }
+
+    var {y, x} = keypointLeftWrist.position;
+    var yLeftWrist = y;
+    var xLeftWrist = x;
+    var {y, x} = keypointRightWrist.position;
+    var yRightWrist = y;
+    var xRightWrist = x;
+    var {y, x} = keypointRightShoulder.position;
+    var yRightShoulder = y;
+
+    if(yRightWrist - yLeftWrist < 50 && xRightWrist - xLeftWrist > 300 && yRightShoulder - yRightWrist > 100)
+    {
+      drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 20);
+    }
+}
+
+export function drawCircle(ctx, y, x, r, color, line_width)
+{
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, 2 * Math.PI);
+    //ctx.fillStyle = color;
+    //ctx.globalAlpha = 0.2;
+    //ctx.fill();
+    ctx.lineWidth = line_width;
+    ctx.strokeStyle = color;
+    ctx.stroke();
 }
 
 /**
