@@ -174,9 +174,10 @@ export function checkPoseY(keypoints, minConfidence, ctx, scale = 1)
     var {y, x} = keypointRightShoulder.position;
     var yRightShoulder = y;
 
-    if(yRightWrist - yLeftWrist < 50 && xRightWrist - xLeftWrist > 300 && yRightShoulder - yRightWrist > 100)
+    if(yRightWrist - yLeftWrist < 50 && xRightWrist - xLeftWrist > 300 && yRightShoulder - yRightWrist > 80)
     {
-      drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 20);
+      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+      drawTick(ctx, 250 * scale, 300 * scale);
     }
 }
 
@@ -184,12 +185,32 @@ export function drawCircle(ctx, y, x, r, color, line_width)
 {
     ctx.beginPath();
     ctx.arc(x, y, r, 0, 2 * Math.PI);
-    //ctx.fillStyle = color;
-    //ctx.globalAlpha = 0.2;
-    //ctx.fill();
     ctx.lineWidth = line_width;
     ctx.strokeStyle = color;
     ctx.stroke();
+
+}
+
+export function drawTick(ctx, centerY, centerX)
+{
+  var radius = 90;
+  //draw circle
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+  ctx.fillStyle = 'green';
+  ctx.fill();
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = '#fff';
+  ctx.stroke();
+
+  //draw tick
+  ctx.beginPath();
+  ctx.moveTo(centerX-35,centerY);
+  ctx.lineTo(centerX-10,centerY+25);
+  ctx.lineTo(centerX+40,centerY-25);
+  ctx.lineWidth = 20;
+  ctx.strokeStyle = '#fff';
+  ctx.stroke();
 }
 
 /**
