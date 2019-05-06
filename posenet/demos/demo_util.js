@@ -27,6 +27,11 @@ var right_wrist_continuous_count = 0;
 var left_wrist_pos = [0];
 var left_wrist_continuous = false;
 var left_wrist_continuous_count = 0;
+var questions = new Array();
+var cur_question = new String();
+var question_cnt = 0;
+export var correct = false;
+export var correct_time = new Date().getTime();
 
 function toTuple({y, x}) {
   return [y, x];
@@ -178,6 +183,8 @@ export function checkPoseY(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
+      correct = true;
+      correct_time = new Date().getTime();
     }
 }
 
@@ -188,7 +195,6 @@ export function drawCircle(ctx, y, x, r, color, line_width)
     ctx.lineWidth = line_width;
     ctx.strokeStyle = color;
     ctx.stroke();
-
 }
 
 export function drawTick(ctx, centerY, centerX)
@@ -211,6 +217,47 @@ export function drawTick(ctx, centerY, centerX)
   ctx.lineWidth = 20;
   ctx.strokeStyle = '#fff';
   ctx.stroke();
+
+}
+
+//setup the question
+export function setupQuestion()
+{
+  question_cnt = 0;
+  questions.push("Make a 'Y' pose");
+  //can push more questions, and remember to add check function for the pose added.
+  //modify checkQuestionPose() and add the check function for the question.
+
+  correct = false;
+  nextQuestion();
+}
+
+export function nextQuestion()
+{
+  correct = false;
+  if(questions.length == 0)
+  {
+    cur_question = "";
+    document.getElementById("question").innerHTML = "No more question";
+    return;
+  }
+  question_cnt = question_cnt + 1;
+  //get one random question from list
+  var id = Math.floor(Math.random()*questions.length);
+  cur_question = questions[id];
+
+  //remove the question from list
+  var arr1 = questions.slice(0,id);
+  var arr2 = questions.slice(id+1);
+  questions = arr1.concat(arr2);
+
+  document.getElementById("question").innerHTML = "Q" + question_cnt + ": " + cur_question;
+}
+
+export function checkQuestionPose(keypoints, minConfidence, ctx, scale = 1)
+{
+  if(cur_question == "Make a 'Y' pose")
+    checkPoseY(keypoints, minConfidence, ctx, scale);
 }
 
 /**

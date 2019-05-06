@@ -18,7 +18,8 @@ import * as posenet from '@tensorflow-models/posenet';
 import dat from 'dat.gui';
 import Stats from 'stats.js';
 
-import {drawBoundingBox, drawKeypoints, drawSkeleton, drawKeypoint, checkPoseY} from './demo_util';
+import {drawBoundingBox, drawKeypoints, drawSkeleton, drawKeypoint, setupQuestion, checkQuestionPose, drawTick, nextQuestion, correct, correct_time} from './demo_util';
+var cur_time;
 
 const videoWidth = 600;
 const videoHeight = 500;
@@ -100,6 +101,7 @@ const guiState = {
   },
   net: null,
 };
+
 
 /**
  * Sets up dat.gui controller on the top-right of the window
@@ -259,13 +261,23 @@ function detectPoseInRealTime(video, net) {
       ctx.restore();
     }
 
+    if(correct == true) //wait 3 seconds if pose is correct
+    {
+    	cur_time = new Date().getTime();
+    	if(cur_time - correct_time < 2000)
+    		drawTick(ctx, 250, 300);
+    	else
+    		nextQuestion();
+    }
+
     // For each pose (i.e. person) detected in an image, loop through the poses
     // and draw the resulting skeleton and keypoints if over certain confidence
     // scores
     poses.forEach(({score, keypoints}) => {
 
       if (score >= minPoseConfidence) {
-      	checkPoseY(keypoints, minPartConfidence, ctx);
+      	if(correct == false)
+      		checkQuestionPose(keypoints, minPartConfidence, ctx);
         drawKeypoint(9, keypoints, minPartConfidence, ctx); //Left Wrist: id=9
         drawKeypoint(10, keypoints, minPartConfidence, ctx); //Right Wrist: id=10
         if (guiState.output.showPoints) {
@@ -313,6 +325,7 @@ export async function bindPage() {
   }
 
   setupGui([], net);
+  setupQuestion();
   setupFPS();
   detectPoseInRealTime(video, net);
 }
