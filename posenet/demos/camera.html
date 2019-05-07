@@ -18,6 +18,99 @@
         margin: auto;
     }
 
+    .button {
+      display: inline-block;
+      padding: 15px 25px;
+      font-size: 24px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      outline: none;
+      color: #fff;
+      background-color: #9ACD32;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 9px #999;
+    }
+
+    .button:hover {background-color: #66CDAA}
+
+    .button:active {
+      background-color: #66CDAA;
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
+    }
+
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+      position: relative;
+      background-color: #fefefe;
+      margin: auto;
+      padding: 0;
+      border: 1px solid #888;
+      width: 30%;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+      -webkit-animation-name: animatetop;
+      -webkit-animation-duration: 0.4s;
+      animation-name: animatetop;
+      animation-duration: 0.4s
+    }
+
+    /* Add Animation */
+    @-webkit-keyframes animatetop {
+      from {top:-300px; opacity:0} 
+      to {top:0; opacity:1}
+    }
+
+    @keyframes animatetop {
+      from {top:-300px; opacity:0}
+      to {top:0; opacity:1}
+    }
+
+    /* The Close Button */
+    .close {
+      color: white;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .modal-header {
+      padding: 2px 16px;
+      background-color: #5cb85c;
+      color: white;
+    }
+
+    .modal-body {padding: 2px 16px;}
+
+    .modal-footer {
+      padding: 2px 16px;
+      background-color: #5cb85c;
+      color: white;
+    }
+
     @media only screen and (max-width: 600px) {
       .footer-text, .dg {
         display: none;
@@ -37,6 +130,8 @@
     <br>
     <!--<h1 id="question" style="border:2px solid Tomato;"></h1>-->
     <h1 id="question" style="background-color:rgb(255, 99, 71);"></h1>
+    <button id="startButton" class="button">Start!</button>
+    <h2 id="time_display" style='display:none'>00:00</h2>
 
     <div id='main' style='display:none'>
         <video id="video" playsinline style=" -moz-transform: scaleX(-1);
@@ -48,6 +143,27 @@
         </video>
         <canvas id="output" />
     </div>
+
+    <!-- The Modal -->
+    <div id="gameOverModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close">&times;</span>
+          <h2>Congratulations!</h2>
+        </div>
+        <div class="modal-body">
+          <p id="modalText">Time used: 00:00</p>
+          <br>
+        </div>
+        <!-- <div class="modal-footer">
+          <h3> </h3>
+        </div> -->
+      </div>
+
+    </div>
+
     <div class="footer">
         <div class="footer-text">
             <p>

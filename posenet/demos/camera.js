@@ -18,7 +18,7 @@ import * as posenet from '@tensorflow-models/posenet';
 import dat from 'dat.gui';
 import Stats from 'stats.js';
 
-import {drawBoundingBox, drawKeypoints, drawSkeleton, drawKeypoint, setupQuestion, checkQuestionPose, drawTick, nextQuestion, correct, correct_time} from './demo_util';
+import {drawBoundingBox, drawKeypoints, drawSkeleton, drawKeypoint, setupQuestion, checkQuestionPose, drawTick, nextQuestion, correct, correct_time, startGame} from './demo_util';
 var cur_time;
 
 const videoWidth = 600;
@@ -325,12 +325,18 @@ export async function bindPage() {
   }
 
   setupGui([], net);
-  setupQuestion();
   setupFPS();
   detectPoseInRealTime(video, net);
 }
+
+
 
 navigator.getUserMedia = navigator.getUserMedia ||
     navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 // kick off the demo
 bindPage();
+document.getElementById("startButton").onclick = startGame;
+var span = document.getElementsByClassName("close")[0];
+span.onclick = function() {
+  document.getElementById("gameOverModal").style.display='none';
+}

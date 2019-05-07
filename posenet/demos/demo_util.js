@@ -30,6 +30,9 @@ var left_wrist_continuous_count = 0;
 var questions = new Array();
 var cur_question = new String();
 var question_cnt = 0;
+var min;
+var sec;
+var intervalVal;
 export var correct = false;
 export var correct_time = new Date().getTime();
 
@@ -220,6 +223,55 @@ export function drawTick(ctx, centerY, centerX)
 
 }
 
+export function startGame()
+{
+  min = 0;
+  sec = 0;
+  document.getElementById("time_display").innerHTML = "00:00";
+  document.getElementById("startButton").style.display='none';
+  document.getElementById("time_display").style.display='block';
+  setupQuestion();
+  intervalVal = setInterval(updateTime, 1000);
+}
+
+function endGame()
+{
+  clearInterval(intervalVal);
+  document.getElementById("startButton").style.display='block';
+  document.getElementById("time_display").style.display='none';
+  document.getElementById("gameOverModal").style.display='block';
+
+  var min_text, sec_text;
+  if(min < 10)
+    min_text = "0" + min;
+  else
+    min_text = min;
+  if(sec < 10)
+    sec_text = "0" + sec;
+  else
+    sec_text = sec;
+  document.getElementById("modalText").innerHTML ='Time used: ' + min_text + ":" + sec_text;
+}
+
+function updateTime()
+{
+  if(++sec > 60)
+  {
+    ++min;
+    sec -= 60;
+  }
+  var min_text, sec_text;
+  if(min < 10)
+    min_text = "0" + min;
+  else
+    min_text = min;
+  if(sec < 10)
+    sec_text = "0" + sec;
+  else
+    sec_text = sec;
+  document.getElementById("time_display").innerHTML = min_text + ":" + sec_text;
+}
+
 //setup the question
 export function setupQuestion()
 {
@@ -238,7 +290,9 @@ export function nextQuestion()
   if(questions.length == 0)
   {
     cur_question = "";
-    document.getElementById("question").innerHTML = "No more question";
+    //document.getElementById("question").innerHTML = "No more question";
+    document.getElementById("question").innerHTML = "";
+    endGame();
     return;
   }
   question_cnt = question_cnt + 1;
