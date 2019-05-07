@@ -261,10 +261,10 @@ function detectPoseInRealTime(video, net) {
       ctx.restore();
     }
 
-    if(correct == true) //wait 3 seconds if pose is correct
+    if(correct == true) //wait 1 seconds if pose is correct
     {
     	cur_time = new Date().getTime();
-    	if(cur_time - correct_time < 2000)
+    	if(cur_time - correct_time < 1000)
     		drawTick(ctx, 250, 300);
     	else
     		nextQuestion();
