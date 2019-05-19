@@ -625,6 +625,8 @@ export function checkTrafficPose(keypoints, minConfidence, ctx, scale = 1) {
     && xLeftElbow - xLeftWrist > 0.5 * shoulderWidth) {
     //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
     drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
     correct = true;
     correct_time = new Date().getTime();
   }
@@ -635,6 +637,8 @@ export function checkTrafficPose(keypoints, minConfidence, ctx, scale = 1) {
   ) {
     //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
     drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
     correct = true;
     correct_time = new Date().getTime();
   }
@@ -686,6 +690,8 @@ export function checkAngryPose(keypoints, minConfidence, ctx, scale = 1) {
     && xLeftElbow < xLeftShoulder && xLeftElbow < xLeftWrist) {
     //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
     drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
     correct = true;
     correct_time = new Date().getTime();
   }
