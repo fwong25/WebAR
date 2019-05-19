@@ -38,7 +38,7 @@ var intervalVal;
 export var correct = false;
 export var correct_time = new Date().getTime();
 
-function toTuple({y, x}) {
+function toTuple({ y, x }) {
   return [y, x];
 }
 
@@ -66,12 +66,12 @@ export function drawSegment([ay, ax], [by, bx], color, scale, ctx) {
  */
 export function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
   const adjacentKeyPoints =
-      posenet.getAdjacentKeyPoints(keypoints, minConfidence);
+    posenet.getAdjacentKeyPoints(keypoints, minConfidence);
 
   adjacentKeyPoints.forEach((keypoints) => {
     drawSegment(
-        toTuple(keypoints[0].position), toTuple(keypoints[1].position), color,
-        scale, ctx);
+      toTuple(keypoints[0].position), toTuple(keypoints[1].position), color,
+      scale, ctx);
   });
 }
 
@@ -86,7 +86,7 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
       continue;
     }
 
-    const {y, x} = keypoint.position;
+    const { y, x } = keypoint.position;
     drawPoint(ctx, y * scale, x * scale, 3, color);
   }
 }
@@ -94,12 +94,11 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
 export function drawKeypoint(id, keypoints, minConfidence, ctx, scale = 1) {
   //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 20);
   var keypoint = keypoints[id];
-  if(id == 9) 
-  {
-    if(!left_wrist_continuous)
-      while(left_wrist_pos.length > 0)
+  if (id == 9) {
+    if (!left_wrist_continuous)
+      while (left_wrist_pos.length > 0)
         left_wrist_pos.pop();
-    else if(left_wrist_pos.length > 20)
+    else if (left_wrist_pos.length > 20)
       left_wrist_pos.shift();
 
     if (keypoint.score >= minConfidence) {
@@ -107,11 +106,9 @@ export function drawKeypoint(id, keypoints, minConfidence, ctx, scale = 1) {
       left_wrist_continuous = true;
       left_wrist_continuous_count = 0;
     }
-    else
-    {
+    else {
       ++left_wrist_continuous_count;
-      if(left_wrist_continuous_count > 5)
-      {
+      if (left_wrist_continuous_count > 5) {
         left_wrist_continuous_count = 0;
         left_wrist_continuous = false;
       }
@@ -119,16 +116,15 @@ export function drawKeypoint(id, keypoints, minConfidence, ctx, scale = 1) {
 
     for (let i = 0; i < left_wrist_pos.length; i++) {
       keypoint = left_wrist_pos[i];
-      const {y, x} = keypoint.position;
+      const { y, x } = keypoint.position;
       drawPoint(ctx, y * scale, x * scale, 5, 'cornflowerblue');
     }
   }
-  else if(id == 10)
-  {
-    if(!right_wrist_continuous)
-      while(right_wrist_pos.length > 0)
+  else if (id == 10) {
+    if (!right_wrist_continuous)
+      while (right_wrist_pos.length > 0)
         right_wrist_pos.pop();
-    else if(right_wrist_pos.length > 20)
+    else if (right_wrist_pos.length > 20)
       right_wrist_pos.shift();
 
     if (keypoint.score >= minConfidence) {
@@ -136,11 +132,9 @@ export function drawKeypoint(id, keypoints, minConfidence, ctx, scale = 1) {
       right_wrist_continuous = true;
       right_wrist_continuous_count = 0;
     }
-    else
-    {
+    else {
       ++right_wrist_continuous_count;
-      if(right_wrist_continuous_count > 5)
-      {
+      if (right_wrist_continuous_count > 5) {
         right_wrist_continuous_count = 0;
         right_wrist_continuous = false;
       }
@@ -148,29 +142,26 @@ export function drawKeypoint(id, keypoints, minConfidence, ctx, scale = 1) {
 
     for (let i = 0; i < right_wrist_pos.length; i++) {
       keypoint = right_wrist_pos[i];
-      const {y, x} = keypoint.position;
+      const { y, x } = keypoint.position;
       drawPoint(ctx, y * scale, x * scale, 5, 'lightpink');
     }
   }
-  else
-  {
-    const {y, x} = keypoint.position;
+  else {
+    const { y, x } = keypoint.position;
     drawPoint(ctx, y * scale, x * scale, 5, color);
   }
 }
 
 
-export function drawCircle(ctx, y, x, r, color, line_width)
-{
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, 2 * Math.PI);
-    ctx.lineWidth = line_width;
-    ctx.strokeStyle = color;
-    ctx.stroke();
+export function drawCircle(ctx, y, x, r, color, line_width) {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, 2 * Math.PI);
+  ctx.lineWidth = line_width;
+  ctx.strokeStyle = color;
+  ctx.stroke();
 }
 
-export function drawTick(ctx, centerY, centerX)
-{
+export function drawTick(ctx, centerY, centerX) {
   var radius = 90;
   //draw circle
   ctx.beginPath();
@@ -183,30 +174,28 @@ export function drawTick(ctx, centerY, centerX)
 
   //draw tick
   ctx.beginPath();
-  ctx.moveTo(centerX-35,centerY);
-  ctx.lineTo(centerX-10,centerY+25);
-  ctx.lineTo(centerX+40,centerY-25);
+  ctx.moveTo(centerX - 35, centerY);
+  ctx.lineTo(centerX - 10, centerY + 25);
+  ctx.lineTo(centerX + 40, centerY - 25);
   ctx.lineWidth = 20;
   ctx.strokeStyle = '#fff';
   ctx.stroke();
 
 }
 
-export function startGame()
-{
+export function startGame() {
   document.getElementById("time_display").innerHTML = "00:10";
-  document.getElementById("startButton").style.display='none';
-  document.getElementById("time_display").style.display='block';
+  document.getElementById("startButton").style.display = 'none';
+  document.getElementById("time_display").style.display = 'block';
   setupQuestion();
 }
 
-function endGame()
-{
-  document.getElementById("startButton").style.display='block';
-  document.getElementById("time_display").style.display='none';
-  document.getElementById("gameOverModal").style.display='block';
+function endGame() {
+  document.getElementById("startButton").style.display = 'block';
+  document.getElementById("time_display").style.display = 'none';
+  document.getElementById("gameOverModal").style.display = 'block';
 
-  document.getElementById("modalText").innerHTML ='Correct answers: ' + correct_cnt + "/" + question_cnt;
+  document.getElementById("modalText").innerHTML = 'Correct answers: ' + correct_cnt + "/" + question_cnt;
 
   // var min_text, sec_text;
   // if(min < 10)
@@ -220,407 +209,490 @@ function endGame()
   // document.getElementById("modalText").innerHTML ='Time used: ' + min_text + ":" + sec_text;
 }
 
-function updateTime()
-{
-  if(++sec >= 60)
-  {
+function updateTime() {
+  if (++sec >= 60) {
     ++min;
     sec -= 60;
   }
   var min_text, sec_text;
-  if(min < 10)
+  if (min < 10)
     min_text = "0" + min;
   else
     min_text = min;
-  if(sec < 10)
+  if (sec < 10)
     sec_text = "0" + sec;
   else
     sec_text = sec;
   document.getElementById("time_display").innerHTML = min_text + ":" + sec_text;
 }
 
-function decTime()
-{
-  if(--sec == 0 && min == 0)
-  {
-      clearInterval(intervalVal);
-      nextQuestion();
+function decTime() {
+  if (--sec == 0 && min == 0) {
+    clearInterval(intervalVal);
+    nextQuestion();
   }
-  if(sec < 0 && min > 0)
-  {
-      --min;
-      sec = 59;
+  if (sec < 0 && min > 0) {
+    --min;
+    sec = 59;
   }
   var min_text, sec_text;
-  if(min < 10)
+  if (min < 10)
     min_text = "0" + min;
   else
     min_text = min;
-  if(sec < 10)
+  if (sec < 10)
     sec_text = "0" + sec;
   else
     sec_text = sec;
   document.getElementById("time_display").innerHTML = min_text + ":" + sec_text;
 }
 
-export function checkPoseY(keypoints, minConfidence, ctx, scale = 1)
-{
-    const keypointRightWrist = keypoints[9];
-    const keypointLeftWrist = keypoints[10];
-    const keypointRightShoulder = keypoints[5];
+export function checkPoseY(keypoints, minConfidence, ctx, scale = 1) {
+  const keypointRightWrist = keypoints[9];
+  const keypointLeftWrist = keypoints[10];
+  const keypointRightShoulder = keypoints[5];
 
-    if (keypointLeftWrist.score < minConfidence) {
-      return;
-    }
-    if (keypointRightWrist.score < minConfidence) {
-      return;
-    }
-    if (keypointRightShoulder.score < minConfidence) {
-      return;
-    }
+  if (keypointLeftWrist.score < minConfidence) {
+    return;
+  }
+  if (keypointRightWrist.score < minConfidence) {
+    return;
+  }
+  if (keypointRightShoulder.score < minConfidence) {
+    return;
+  }
 
-    var {y, x} = keypointLeftWrist.position;
-    var yLeftWrist = y;
-    var xLeftWrist = x;
-    var {y, x} = keypointRightWrist.position;
-    var yRightWrist = y;
-    var xRightWrist = x;
-    var {y, x} = keypointRightShoulder.position;
-    var yRightShoulder = y;
+  var { y, x } = keypointLeftWrist.position;
+  var yLeftWrist = y;
+  var xLeftWrist = x;
+  var { y, x } = keypointRightWrist.position;
+  var yRightWrist = y;
+  var xRightWrist = x;
+  var { y, x } = keypointRightShoulder.position;
+  var yRightShoulder = y;
 
-    if(yRightWrist - yLeftWrist < 50 && xRightWrist - xLeftWrist > 300 && yRightShoulder - yRightWrist > 80)
-    {
-      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
-      drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
-      correct = true;
-      correct_time = new Date().getTime();
-    }
+  if (yRightWrist - yLeftWrist < 50 && xRightWrist - xLeftWrist > 300 && yRightShoulder - yRightWrist > 80) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
+    correct = true;
+    correct_time = new Date().getTime();
+  }
 }
 
-export function checkSwagPose(keypoints, minConfidence, ctx, scale = 1)
-{
-    const keypointRightWrist = keypoints[9];
-    const keypointLeftWrist = keypoints[10];
-    const keypointRightShoulder = keypoints[5];
-    const keypointLeftShoulder = keypoints[6];
-    const keypointRightElbow = keypoints[7];
-    const keypointLeftElbow = keypoints[8];
+export function checkSwagPose(keypoints, minConfidence, ctx, scale = 1) {
+  const keypointRightWrist = keypoints[9];
+  const keypointLeftWrist = keypoints[10];
+  const keypointRightShoulder = keypoints[5];
+  const keypointLeftShoulder = keypoints[6];
+  const keypointRightElbow = keypoints[7];
+  const keypointLeftElbow = keypoints[8];
 
-    if (keypointLeftWrist.score < minConfidence
-      || keypointRightWrist.score < minConfidence
-      || keypointRightShoulder.score < minConfidence
-      || keypointLeftShoulder.score < minConfidence
-      || keypointRightElbow < minConfidence
-      || keypointLeftElbow < minConfidence) 
-    {
-      return;
-    }
+  if (keypointLeftWrist.score < minConfidence
+    || keypointRightWrist.score < minConfidence
+    || keypointRightShoulder.score < minConfidence
+    || keypointLeftShoulder.score < minConfidence
+    || keypointRightElbow < minConfidence
+    || keypointLeftElbow < minConfidence) {
+    return;
+  }
 
-    var {y, x} = keypointLeftWrist.position;
-    var yLeftWrist = y;
-    var xLeftWrist = x;
-    var {y, x} = keypointRightWrist.position;
-    var yRightWrist = y;
-    var xRightWrist = x;
-    var {y, x} = keypointRightShoulder.position;
-    var yRightShoulder = y;
-    var xRightShoulder = x;
-    var {y, x} = keypointLeftShoulder.position;
-    var yLeftShoulder = y;
-    var xLeftShoulder = x;
-    var {y, x} = keypointRightElbow.position;
-    var yRightElbow = y;
-    var xRightElbow = x;
-    var {y, x} = keypointLeftElbow.position;
-    var yLeftElbow = y;
-    var xLeftElbow = x;
+  var { y, x } = keypointLeftWrist.position;
+  var yLeftWrist = y;
+  var xLeftWrist = x;
+  var { y, x } = keypointRightWrist.position;
+  var yRightWrist = y;
+  var xRightWrist = x;
+  var { y, x } = keypointRightShoulder.position;
+  var yRightShoulder = y;
+  var xRightShoulder = x;
+  var { y, x } = keypointLeftShoulder.position;
+  var yLeftShoulder = y;
+  var xLeftShoulder = x;
+  var { y, x } = keypointRightElbow.position;
+  var yRightElbow = y;
+  var xRightElbow = x;
+  var { y, x } = keypointLeftElbow.position;
+  var yLeftElbow = y;
+  var xLeftElbow = x;
 
-    var shoulderWidth = xRightShoulder - xLeftShoulder;
+  var shoulderWidth = xRightShoulder - xLeftShoulder;
 
-    if(yRightWrist < yRightShoulder && xRightWrist < xRightShoulder //for right-handed
-      && xRightElbow > xRightShoulder
-      && xLeftShoulder - xLeftElbow > 0.5*shoulderWidth
-      && xLeftElbow - xLeftWrist > 0.5*shoulderWidth
-      && yLeftShoulder - yLeftWrist > 0.3*shoulderWidth)
-    {
-      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
-      drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
-      correct = true;
-      correct_time = new Date().getTime();
-    }
-    else if(yLeftWrist < yLeftShoulder && xLeftWrist > xLeftShoulder //for left-handed
-      && xLeftElbow < xLeftShoulder
-      && xRightElbow - xRightShoulder > 0.5*shoulderWidth
-      && xRightWrist - xRightElbow > 0.5*shoulderWidth
-      && yRightShoulder - yRightWrist > 0.3*shoulderWidth)
-    {
-      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
-      drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
-      correct = true;
-      correct_time = new Date().getTime();
-    }
+  if (yRightWrist < yRightShoulder && xRightWrist < xRightShoulder //for right-handed
+    && xRightElbow > xRightShoulder
+    && xLeftShoulder - xLeftElbow > 0.5 * shoulderWidth
+    && xLeftElbow - xLeftWrist > 0.5 * shoulderWidth
+    && yLeftShoulder - yLeftWrist > 0.3 * shoulderWidth) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
+    correct = true;
+    correct_time = new Date().getTime();
+  }
+  else if (yLeftWrist < yLeftShoulder && xLeftWrist > xLeftShoulder //for left-handed
+    && xLeftElbow < xLeftShoulder
+    && xRightElbow - xRightShoulder > 0.5 * shoulderWidth
+    && xRightWrist - xRightElbow > 0.5 * shoulderWidth
+    && yRightShoulder - yRightWrist > 0.3 * shoulderWidth) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
+    correct = true;
+    correct_time = new Date().getTime();
+  }
 }
 
-export function checkSupermanPose(keypoints, minConfidence, ctx, scale = 1)
-{
-    const keypointRightWrist = keypoints[9];
-    const keypointLeftWrist = keypoints[10];
-    const keypointRightShoulder = keypoints[5];
-    const keypointLeftShoulder = keypoints[6];
-    const keypointRightElbow = keypoints[7];
-    const keypointLeftElbow = keypoints[8];
+export function checkSupermanPose(keypoints, minConfidence, ctx, scale = 1) {
+  const keypointRightWrist = keypoints[9];
+  const keypointLeftWrist = keypoints[10];
+  const keypointRightShoulder = keypoints[5];
+  const keypointLeftShoulder = keypoints[6];
+  const keypointRightElbow = keypoints[7];
+  const keypointLeftElbow = keypoints[8];
 
-    if (keypointLeftWrist.score < minConfidence
-      || keypointRightWrist.score < minConfidence
-      || keypointRightShoulder.score < minConfidence
-      || keypointLeftShoulder.score < minConfidence
-      || keypointRightElbow < minConfidence
-      || keypointLeftElbow < minConfidence) 
-    {
-      return;
-    }
+  if (keypointLeftWrist.score < minConfidence
+    || keypointRightWrist.score < minConfidence
+    || keypointRightShoulder.score < minConfidence
+    || keypointLeftShoulder.score < minConfidence
+    || keypointRightElbow < minConfidence
+    || keypointLeftElbow < minConfidence) {
+    return;
+  }
 
-    var {y, x} = keypointLeftWrist.position;
-    var yLeftWrist = y;
-    var xLeftWrist = x;
-    var {y, x} = keypointRightWrist.position;
-    var yRightWrist = y;
-    var xRightWrist = x;
-    var {y, x} = keypointRightShoulder.position;
-    var yRightShoulder = y;
-    var xRightShoulder = x;
-    var {y, x} = keypointLeftShoulder.position;
-    var yLeftShoulder = y;
-    var xLeftShoulder = x;
-    var {y, x} = keypointRightElbow.position;
-    var yRightElbow = y;
-    var xRightElbow = x;
-    var {y, x} = keypointLeftElbow.position;
-    var yLeftElbow = y;
-    var xLeftElbow = x;
+  var { y, x } = keypointLeftWrist.position;
+  var yLeftWrist = y;
+  var xLeftWrist = x;
+  var { y, x } = keypointRightWrist.position;
+  var yRightWrist = y;
+  var xRightWrist = x;
+  var { y, x } = keypointRightShoulder.position;
+  var yRightShoulder = y;
+  var xRightShoulder = x;
+  var { y, x } = keypointLeftShoulder.position;
+  var yLeftShoulder = y;
+  var xLeftShoulder = x;
+  var { y, x } = keypointRightElbow.position;
+  var yRightElbow = y;
+  var xRightElbow = x;
+  var { y, x } = keypointLeftElbow.position;
+  var yLeftElbow = y;
+  var xLeftElbow = x;
 
-    var shoulderWidth = xRightShoulder - xLeftShoulder;
+  var shoulderWidth = xRightShoulder - xLeftShoulder;
 
-    if(yRightWrist > yRightShoulder && yRightElbow > yRightWrist //for right-handed
-      && xRightWrist < xRightShoulder && xRightElbow > xRightShoulder
-      && xLeftShoulder - xLeftElbow > 0.5*shoulderWidth
-      && xLeftElbow - xLeftWrist > 0.5*shoulderWidth
-      && yLeftShoulder - yLeftWrist > 0.3*shoulderWidth)
-    {
-      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
-      drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
-      correct = true;
-      correct_time = new Date().getTime();
-    }
-    else if(yLeftWrist > yLeftShoulder && yRightElbow > yRightWrist //for left-handed
-      && xLeftWrist > xLeftShoulder && xLeftElbow < xLeftShoulder
-      && xRightElbow - xRightShoulder > 0.5*shoulderWidth
-      && xRightWrist - xRightElbow > 0.5*shoulderWidth
-      && yRightShoulder - yRightWrist > 0.3*shoulderWidth)
-    {
-      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
-      drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
-      correct = true;
-      correct_time = new Date().getTime();
-    }
+  if (yRightWrist > yRightShoulder && yRightElbow > yRightWrist //for right-handed
+    && xRightWrist < xRightShoulder && xRightElbow > xRightShoulder
+    && xLeftShoulder - xLeftElbow > 0.5 * shoulderWidth
+    && xLeftElbow - xLeftWrist > 0.5 * shoulderWidth
+    && yLeftShoulder - yLeftWrist > 0.3 * shoulderWidth) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
+    correct = true;
+    correct_time = new Date().getTime();
+  }
+  else if (yLeftWrist > yLeftShoulder && yRightElbow > yRightWrist //for left-handed
+    && xLeftWrist > xLeftShoulder && xLeftElbow < xLeftShoulder
+    && xRightElbow - xRightShoulder > 0.5 * shoulderWidth
+    && xRightWrist - xRightElbow > 0.5 * shoulderWidth
+    && yRightShoulder - yRightWrist > 0.3 * shoulderWidth) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
+    correct = true;
+    correct_time = new Date().getTime();
+  }
 }
 
-export function checkRespectPose(keypoints, minConfidence, ctx, scale = 1)
-{
-    const keypointRightWrist = keypoints[9];
-    const keypointLeftWrist = keypoints[10];
-    const keypointRightShoulder = keypoints[5];
-    const keypointLeftShoulder = keypoints[6];
-    const keypointRightElbow = keypoints[7];
-    const keypointLeftElbow = keypoints[8];
+export function checkRespectPose(keypoints, minConfidence, ctx, scale = 1) {
+  const keypointRightWrist = keypoints[9];
+  const keypointLeftWrist = keypoints[10];
+  const keypointRightShoulder = keypoints[5];
+  const keypointLeftShoulder = keypoints[6];
+  const keypointRightElbow = keypoints[7];
+  const keypointLeftElbow = keypoints[8];
 
-    if (keypointLeftWrist.score < minConfidence
-      || keypointRightWrist.score < minConfidence
-      || keypointRightShoulder.score < minConfidence
-      || keypointLeftShoulder.score < minConfidence
-      || keypointRightElbow < minConfidence
-      || keypointLeftElbow < minConfidence) 
-    {
-      return;
-    }
+  if (keypointLeftWrist.score < minConfidence
+    || keypointRightWrist.score < minConfidence
+    || keypointRightShoulder.score < minConfidence
+    || keypointLeftShoulder.score < minConfidence
+    || keypointRightElbow < minConfidence
+    || keypointLeftElbow < minConfidence) {
+    return;
+  }
 
-    var {y, x} = keypointLeftWrist.position;
-    var yLeftWrist = y;
-    var xLeftWrist = x;
-    var {y, x} = keypointRightWrist.position;
-    var yRightWrist = y;
-    var xRightWrist = x;
-    var {y, x} = keypointRightShoulder.position;
-    var yRightShoulder = y;
-    var xRightShoulder = x;
-    var {y, x} = keypointLeftShoulder.position;
-    var yLeftShoulder = y;
-    var xLeftShoulder = x;
-    var {y, x} = keypointRightElbow.position;
-    var yRightElbow = y;
-    var xRightElbow = x;
-    var {y, x} = keypointLeftElbow.position;
-    var yLeftElbow = y;
-    var xLeftElbow = x;
+  var { y, x } = keypointLeftWrist.position;
+  var yLeftWrist = y;
+  var xLeftWrist = x;
+  var { y, x } = keypointRightWrist.position;
+  var yRightWrist = y;
+  var xRightWrist = x;
+  var { y, x } = keypointRightShoulder.position;
+  var yRightShoulder = y;
+  var xRightShoulder = x;
+  var { y, x } = keypointLeftShoulder.position;
+  var yLeftShoulder = y;
+  var xLeftShoulder = x;
+  var { y, x } = keypointRightElbow.position;
+  var yRightElbow = y;
+  var xRightElbow = x;
+  var { y, x } = keypointLeftElbow.position;
+  var yLeftElbow = y;
+  var xLeftElbow = x;
 
-    var shoulderWidth = xRightShoulder - xLeftShoulder;
+  var shoulderWidth = xRightShoulder - xLeftShoulder;
 
-    if(yRightShoulder - yRightWrist > 0.3*shoulderWidth && yRightElbow > yRightWrist //for right-handed
-      && xRightWrist > xRightShoulder && xRightElbow > xRightWrist)
-    {
-      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
-      drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
-      correct = true;
-      correct_time = new Date().getTime();
-    }
-    else if(yLeftShoulder - yLeftWrist > 0.3*shoulderWidth && yLeftElbow > yLeftWrist //for left-handed
-      && xLeftWrist < xLeftShoulder && xLeftElbow < xLeftWrist)
-    {
-      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
-      drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
-      correct = true;
-      correct_time = new Date().getTime();
-    }
+  if (yRightShoulder - yRightWrist > 0.3 * shoulderWidth && yRightElbow > yRightWrist //for right-handed
+    && xRightWrist > xRightShoulder && xRightElbow > xRightWrist) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
+    correct = true;
+    correct_time = new Date().getTime();
+  }
+  else if (yLeftShoulder - yLeftWrist > 0.3 * shoulderWidth && yLeftElbow > yLeftWrist //for left-handed
+    && xLeftWrist < xLeftShoulder && xLeftElbow < xLeftWrist) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
+    correct = true;
+    correct_time = new Date().getTime();
+  }
 }
 
-export function checkViolinPose(keypoints, minConfidence, ctx, scale = 1)
-{
-    const keypointRightWrist = keypoints[9];
-    const keypointLeftWrist = keypoints[10];
-    const keypointRightShoulder = keypoints[5];
-    const keypointLeftShoulder = keypoints[6];
-    const keypointRightElbow = keypoints[7];
-    const keypointLeftElbow = keypoints[8];
+export function checkViolinPose(keypoints, minConfidence, ctx, scale = 1) {
+  const keypointRightWrist = keypoints[9];
+  const keypointLeftWrist = keypoints[10];
+  const keypointRightShoulder = keypoints[5];
+  const keypointLeftShoulder = keypoints[6];
+  const keypointRightElbow = keypoints[7];
+  const keypointLeftElbow = keypoints[8];
 
-    if (keypointLeftWrist.score < minConfidence
-      || keypointRightWrist.score < minConfidence
-      || keypointRightShoulder.score < minConfidence
-      || keypointLeftShoulder.score < minConfidence
-      || keypointRightElbow < minConfidence
-      || keypointLeftElbow < minConfidence) 
-    {
-      return;
-    }
+  if (keypointLeftWrist.score < minConfidence
+    || keypointRightWrist.score < minConfidence
+    || keypointRightShoulder.score < minConfidence
+    || keypointLeftShoulder.score < minConfidence
+    || keypointRightElbow < minConfidence
+    || keypointLeftElbow < minConfidence) {
+    return;
+  }
 
-    var {y, x} = keypointLeftWrist.position;
-    var yLeftWrist = y;
-    var xLeftWrist = x;
-    var {y, x} = keypointRightWrist.position;
-    var yRightWrist = y;
-    var xRightWrist = x;
-    var {y, x} = keypointRightShoulder.position;
-    var yRightShoulder = y;
-    var xRightShoulder = x;
-    var {y, x} = keypointLeftShoulder.position;
-    var yLeftShoulder = y;
-    var xLeftShoulder = x;
-    var {y, x} = keypointRightElbow.position;
-    var yRightElbow = y;
-    var xRightElbow = x;
-    var {y, x} = keypointLeftElbow.position;
-    var yLeftElbow = y;
-    var xLeftElbow = x;
+  var { y, x } = keypointLeftWrist.position;
+  var yLeftWrist = y;
+  var xLeftWrist = x;
+  var { y, x } = keypointRightWrist.position;
+  var yRightWrist = y;
+  var xRightWrist = x;
+  var { y, x } = keypointRightShoulder.position;
+  var yRightShoulder = y;
+  var xRightShoulder = x;
+  var { y, x } = keypointLeftShoulder.position;
+  var yLeftShoulder = y;
+  var xLeftShoulder = x;
+  var { y, x } = keypointRightElbow.position;
+  var yRightElbow = y;
+  var xRightElbow = x;
+  var { y, x } = keypointLeftElbow.position;
+  var yLeftElbow = y;
+  var xLeftElbow = x;
 
-    var shoulderWidth = xRightShoulder - xLeftShoulder;
+  var shoulderWidth = xRightShoulder - xLeftShoulder;
 
-    if(yRightElbow - yRightShoulder > 0.3*shoulderWidth && yRightElbow > yRightWrist //for right-handed
-      && xRightShoulder - xRightWrist > 0.3*shoulderWidth && xRightElbow > xRightWrist
-      && xLeftShoulder - xLeftWrist > 0.5*shoulderWidth
-      && xLeftElbow - xLeftWrist > 0.3*shoulderWidth
-      && yLeftElbow - yLeftWrist > 0.3*shoulderWidth)
-    {
-      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
-      drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
-      correct = true;
-      correct_time = new Date().getTime();
-    }
+  if (yRightElbow - yRightShoulder > 0.3 * shoulderWidth && yRightElbow > yRightWrist //for right-handed
+    && xRightShoulder - xRightWrist > 0.3 * shoulderWidth && xRightElbow > xRightWrist
+    && xLeftShoulder - xLeftWrist > 0.5 * shoulderWidth
+    && xLeftElbow - xLeftWrist > 0.3 * shoulderWidth
+    && yLeftElbow - yLeftWrist > 0.3 * shoulderWidth) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
+    correct = true;
+    correct_time = new Date().getTime();
+  }
 }
 
-export function checkModelPose(keypoints, minConfidence, ctx, scale = 1)
-{
-    const keypointRightWrist = keypoints[9];
-    const keypointLeftWrist = keypoints[10];
-    const keypointRightShoulder = keypoints[5];
-    const keypointLeftShoulder = keypoints[6];
-    const keypointRightElbow = keypoints[7];
-    const keypointLeftElbow = keypoints[8];
+export function checkModelPose(keypoints, minConfidence, ctx, scale = 1) {
+  const keypointRightWrist = keypoints[9];
+  const keypointLeftWrist = keypoints[10];
+  const keypointRightShoulder = keypoints[5];
+  const keypointLeftShoulder = keypoints[6];
+  const keypointRightElbow = keypoints[7];
+  const keypointLeftElbow = keypoints[8];
 
-    if (keypointLeftWrist.score < minConfidence
-      || keypointRightWrist.score < minConfidence
-      || keypointRightShoulder.score < minConfidence
-      || keypointLeftShoulder.score < minConfidence
-      || keypointRightElbow < minConfidence
-      || keypointLeftElbow < minConfidence) 
-    {
-      return;
-    }
+  if (keypointLeftWrist.score < minConfidence
+    || keypointRightWrist.score < minConfidence
+    || keypointRightShoulder.score < minConfidence
+    || keypointLeftShoulder.score < minConfidence
+    || keypointRightElbow < minConfidence
+    || keypointLeftElbow < minConfidence) {
+    return;
+  }
 
-    var {y, x} = keypointLeftWrist.position;
-    var yLeftWrist = y;
-    var xLeftWrist = x;
-    var {y, x} = keypointRightWrist.position;
-    var yRightWrist = y;
-    var xRightWrist = x;
-    var {y, x} = keypointRightShoulder.position;
-    var yRightShoulder = y;
-    var xRightShoulder = x;
-    var {y, x} = keypointLeftShoulder.position;
-    var yLeftShoulder = y;
-    var xLeftShoulder = x;
-    var {y, x} = keypointRightElbow.position;
-    var yRightElbow = y;
-    var xRightElbow = x;
-    var {y, x} = keypointLeftElbow.position;
-    var yLeftElbow = y;
-    var xLeftElbow = x;
+  var { y, x } = keypointLeftWrist.position;
+  var yLeftWrist = y;
+  var xLeftWrist = x;
+  var { y, x } = keypointRightWrist.position;
+  var yRightWrist = y;
+  var xRightWrist = x;
+  var { y, x } = keypointRightShoulder.position;
+  var yRightShoulder = y;
+  var xRightShoulder = x;
+  var { y, x } = keypointLeftShoulder.position;
+  var yLeftShoulder = y;
+  var xLeftShoulder = x;
+  var { y, x } = keypointRightElbow.position;
+  var yRightElbow = y;
+  var xRightElbow = x;
+  var { y, x } = keypointLeftElbow.position;
+  var yLeftElbow = y;
+  var xLeftElbow = x;
 
-    var shoulderWidth = xRightShoulder - xLeftShoulder;
+  var shoulderWidth = xRightShoulder - xLeftShoulder;
 
-    if(yRightWrist - yRightShoulder > 0.7*shoulderWidth //for right-handed
-      && yRightElbow < yRightWrist && yRightShoulder < yRightWrist
-      && Math.abs(xRightWrist - xRightShoulder) < 0.3*shoulderWidth 
-      && xRightElbow - xRightShoulder > 0.5*shoulderWidth)
-    {
-      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
-      drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
-      correct = true;
-      correct_time = new Date().getTime();
-    }
-    else if(yLeftWrist - yLeftShoulder > 0.7*shoulderWidth //for left-handed
-      && yLeftElbow < yLeftWrist && yLeftShoulder < yLeftWrist
-      && Math.abs(xLeftWrist - xLeftShoulder) < 0.3*shoulderWidth 
-      && xLeftShoulder - xLeftElbow > 0.5*shoulderWidth)
-    {
-      //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
-      drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
-      correct = true;
-      correct_time = new Date().getTime();
-    }
+  if (yRightWrist - yRightShoulder > 0.7 * shoulderWidth //for right-handed
+    && yRightElbow < yRightWrist && yRightShoulder < yRightWrist
+    && Math.abs(xRightWrist - xRightShoulder) < 0.3 * shoulderWidth
+    && xRightElbow - xRightShoulder > 0.5 * shoulderWidth) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
+    correct = true;
+    correct_time = new Date().getTime();
+  }
+  else if (yLeftWrist - yLeftShoulder > 0.7 * shoulderWidth //for left-handed
+    && yLeftElbow < yLeftWrist && yLeftShoulder < yLeftWrist
+    && Math.abs(xLeftWrist - xLeftShoulder) < 0.3 * shoulderWidth
+    && xLeftShoulder - xLeftElbow > 0.5 * shoulderWidth) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    clearInterval(intervalVal);
+    ++correct_cnt;
+    correct = true;
+    correct_time = new Date().getTime();
+  }
+}
+
+export function checkTrafficPose(keypoints, minConfidence, ctx, scale = 1) {
+  const keypointRightWrist = keypoints[9];
+  const keypointLeftWrist = keypoints[10];
+  const keypointRightShoulder = keypoints[5];
+  const keypointLeftShoulder = keypoints[6];
+  const keypointRightElbow = keypoints[7];
+  const keypointLeftElbow = keypoints[8];
+
+  if (keypointLeftWrist.score < minConfidence
+    || keypointRightWrist.score < minConfidence
+    || keypointRightShoulder.score < minConfidence
+    || keypointLeftShoulder.score < minConfidence
+    || keypointRightElbow < minConfidence
+    || keypointLeftElbow < minConfidence) {
+    return;
+  }
+
+  var { y, x } = keypointLeftWrist.position;
+  var yLeftWrist = y;
+  var xLeftWrist = x;
+  var { y, x } = keypointRightWrist.position;
+  var yRightWrist = y;
+  var xRightWrist = x;
+  var { y, x } = keypointRightShoulder.position;
+  var yRightShoulder = y;
+  var xRightShoulder = x;
+  var { y, x } = keypointLeftShoulder.position;
+  var yLeftShoulder = y;
+  var xLeftShoulder = x;
+  var { y, x } = keypointRightElbow.position;
+  var yRightElbow = y;
+  var xRightElbow = x;
+  var { y, x } = keypointLeftElbow.position;
+  var yLeftElbow = y;
+  var xLeftElbow = x;
+
+  var shoulderWidth = xRightShoulder - xLeftShoulder;
+
+  if (yRightShoulder - yRightWrist > 0.3 * shoulderWidth //for right-handed
+    && xRightWrist > xRightShoulder && xRightElbow > xRightWrist
+    && xLeftShoulder - xLeftElbow > 0.5 * shoulderWidth
+    && xLeftElbow - xLeftWrist > 0.5 * shoulderWidth) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    correct = true;
+    correct_time = new Date().getTime();
+  }
+  else if (yLeftShoulder - yLeftWrist > 0.3 * shoulderWidth //for left-handed
+    && xLeftWrist < xLeftShoulder && xLeftElbow < xLeftWrist
+    && xRightElbow - xRightShoulder > 0.5 * shoulderWidth
+    && xRightWrist - xRightElbow > 0.5 * shoulderWidth
+  ) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    correct = true;
+    correct_time = new Date().getTime();
+  }
+}
+
+export function checkAngryPose(keypoints, minConfidence, ctx, scale = 1) {
+  const keypointRightWrist = keypoints[9];
+  const keypointLeftWrist = keypoints[10];
+  const keypointRightShoulder = keypoints[5];
+  const keypointLeftShoulder = keypoints[6];
+  const keypointRightElbow = keypoints[7];
+  const keypointLeftElbow = keypoints[8];
+
+  if (keypointLeftWrist.score < minConfidence
+    || keypointRightWrist.score < minConfidence
+    || keypointRightShoulder.score < minConfidence
+    || keypointLeftShoulder.score < minConfidence
+    || keypointRightElbow < minConfidence
+    || keypointLeftElbow < minConfidence) {
+    return;
+  }
+
+  var { y, x } = keypointLeftWrist.position;
+  var yLeftWrist = y;
+  var xLeftWrist = x;
+  var { y, x } = keypointRightWrist.position;
+  var yRightWrist = y;
+  var xRightWrist = x;
+  var { y, x } = keypointRightShoulder.position;
+  var yRightShoulder = y;
+  var xRightShoulder = x;
+  var { y, x } = keypointLeftShoulder.position;
+  var yLeftShoulder = y;
+  var xLeftShoulder = x;
+  var { y, x } = keypointRightElbow.position;
+  var yRightElbow = y;
+  var xRightElbow = x;
+  var { y, x } = keypointLeftElbow.position;
+  var yLeftElbow = y;
+  var xLeftElbow = x;
+
+  var shoulderWidth = xRightShoulder - xLeftShoulder;
+
+  if (yRightWrist - yRightShoulder > 0.6 * shoulderWidth
+    && yRightWrist - yRightElbow > 0.3 * shoulderWidth
+    && xRightElbow > xRightShoulder && xRightElbow > xRightWrist
+    && yLeftWrist - yLeftShoulder > 0.6 * shoulderWidth
+    && yRightWrist - yRightElbow > 0.3 * shoulderWidth
+    && xLeftElbow < xLeftShoulder && xLeftElbow < xLeftWrist) {
+    //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
+    drawTick(ctx, 250 * scale, 300 * scale);
+    correct = true;
+    correct_time = new Date().getTime();
+  }
 }
 
 //setup the question
-export function setupQuestion()
-{
+export function setupQuestion() {
   question_cnt = 0;
   correct_cnt = 0;
   questions = [];
@@ -630,6 +702,8 @@ export function setupQuestion()
   questions.push("Respect");
   questions.push("Playing Violin");
   questions.push("I'm a model");
+  questions.push("Directing Traffic");
+  questions.push("Angry");
   /*****************
   can push more questions, and remember to add check function for the pose added.
   -> modify checkQuestionPose() and add the check function for the question.
@@ -639,11 +713,9 @@ export function setupQuestion()
   nextQuestion();
 }
 
-export function nextQuestion()
-{
+export function nextQuestion() {
   correct = false;
-  if(question_cnt >= question_total || questions.length == 0)
-  {
+  if (question_cnt >= question_total || questions.length == 0) {
     cur_question = "";
     //document.getElementById("question").innerHTML = "No more question";
     document.getElementById("question").innerHTML = "";
@@ -652,12 +724,12 @@ export function nextQuestion()
   }
   question_cnt = question_cnt + 1;
   //get one random question from list
-  var id = Math.floor(Math.random()*questions.length);
+  var id = Math.floor(Math.random() * questions.length);
   cur_question = questions[id];
 
   //remove the question from list
-  var arr1 = questions.slice(0,id);
-  var arr2 = questions.slice(id+1);
+  var arr1 = questions.slice(0, id);
+  var arr2 = questions.slice(id + 1);
   questions = arr1.concat(arr2);
 
   document.getElementById("question").innerHTML = "Q" + question_cnt + ": " + cur_question;
@@ -667,20 +739,23 @@ export function nextQuestion()
   intervalVal = setInterval(decTime, 1000);
 }
 
-export function checkQuestionPose(keypoints, minConfidence, ctx, scale = 1)
-{
-  if(cur_question == "Make a 'Y' pose")
+export function checkQuestionPose(keypoints, minConfidence, ctx, scale = 1) {
+  if (cur_question == "Make a 'Y' pose")
     checkPoseY(keypoints, minConfidence, ctx, scale);
-  else if(cur_question == "Swag")
+  else if (cur_question == "Swag")
     checkSwagPose(keypoints, minConfidence, ctx, scale);
-  else if(cur_question == "Superman")
+  else if (cur_question == "Superman")
     checkSupermanPose(keypoints, minConfidence, ctx, scale);
-  else if(cur_question == "Respect")
+  else if (cur_question == "Respect")
     checkRespectPose(keypoints, minConfidence, ctx, scale);
-  else if(cur_question == "Playing Violin")
+  else if (cur_question == "Playing Violin")
     checkViolinPose(keypoints, minConfidence, ctx, scale);
-  else if(cur_question == "I'm a model")
+  else if (cur_question == "I'm a model")
     checkModelPose(keypoints, minConfidence, ctx, scale);
+  else if (cur_question == "Directing Traffic")
+    checkTrafficPose(keypoints, minConfidence, ctx, scale);
+  else if (cur_question == "Angry")
+    checkAngryPose(keypoints, minConfidence, ctx, scale);
 }
 
 /**
@@ -692,8 +767,8 @@ export function drawBoundingBox(keypoints, ctx) {
   const boundingBox = posenet.getBoundingBox(keypoints);
 
   ctx.rect(
-      boundingBox.minX, boundingBox.minY, boundingBox.maxX - boundingBox.minX,
-      boundingBox.maxY - boundingBox.minY);
+    boundingBox.minX, boundingBox.minY, boundingBox.maxX - boundingBox.minX,
+    boundingBox.maxY - boundingBox.minY);
 
   ctx.strokeStyle = boundingBoxColor;
   ctx.stroke();
@@ -771,9 +846,9 @@ function drawPoints(ctx, points, radius, color) {
  * https://medium.com/tensorflow/real-time-human-pose-estimation-in-the-browser-with-tensorflow-js-7dd0bc881cd5
  */
 export function drawOffsetVectors(
-    heatMapValues, offsets, outputStride, scale = 1, ctx) {
+  heatMapValues, offsets, outputStride, scale = 1, ctx) {
   const offsetPoints =
-      posenet.singlePose.getOffsetPoints(heatMapValues, outputStride, offsets);
+    posenet.singlePose.getOffsetPoints(heatMapValues, outputStride, offsets);
 
   const heatmapData = heatMapValues.buffer().values;
   const offsetPointsData = offsetPoints.buffer().values;
@@ -785,6 +860,6 @@ export function drawOffsetVectors(
     const offsetPointX = offsetPointsData[i + 1];
 
     drawSegment(
-        [heatmapY, heatmapX], [offsetPointY, offsetPointX], color, scale, ctx);
+      [heatmapY, heatmapX], [offsetPointY, offsetPointX], color, scale, ctx);
   }
 }
