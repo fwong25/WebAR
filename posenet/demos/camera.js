@@ -333,6 +333,8 @@ export async function bindPage() {
 
 navigator.getUserMedia = navigator.getUserMedia ||
     navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+bindPage();
 /* info of beginning*/
 var begininfo = document.getElementById("begin-info");
 begininfo.style.display = "block";

@@ -29,9 +29,7 @@ var left_wrist_continuous = false;
 var left_wrist_continuous_count = 0;
 var questions = new Array();
 var cur_question = new String();
-var question_total = 5; //要出幾題
 var question_cnt = 0;
-var correct_cnt = 0;
 var min;
 var sec;
 var intervalVal;
@@ -194,30 +192,32 @@ export function drawTick(ctx, centerY, centerX)
 
 export function startGame()
 {
-  document.getElementById("time_display").innerHTML = "00:10";
+  min = 0;
+  sec = 0;
+  document.getElementById("time_display").innerHTML = "00:00";
   document.getElementById("startButton").style.display='none';
   document.getElementById("time_display").style.display='block';
   setupQuestion();
+  intervalVal = setInterval(updateTime, 1000);
 }
 
 function endGame()
 {
+  clearInterval(intervalVal);
   document.getElementById("startButton").style.display='block';
   document.getElementById("time_display").style.display='none';
   document.getElementById("gameOverModal").style.display='block';
 
-  document.getElementById("modalText").innerHTML ='Correct answers: ' + correct_cnt + "/" + question_cnt;
-
-  // var min_text, sec_text;
-  // if(min < 10)
-  //   min_text = "0" + min;
-  // else
-  //   min_text = min;
-  // if(sec < 10)
-  //   sec_text = "0" + sec;
-  // else
-  //   sec_text = sec;
-  // document.getElementById("modalText").innerHTML ='Time used: ' + min_text + ":" + sec_text;
+  var min_text, sec_text;
+  if(min < 10)
+    min_text = "0" + min;
+  else
+    min_text = min;
+  if(sec < 10)
+    sec_text = "0" + sec;
+  else
+    sec_text = sec;
+  document.getElementById("modalText").innerHTML ='Time used: ' + min_text + ":" + sec_text;
 }
 
 function updateTime()
@@ -241,15 +241,15 @@ function updateTime()
 
 function decTime()
 {
-  if(--sec == 0 && min == 0)
+  if(--sec < 0)
   {
-      clearInterval(intervalVal);
+    if(sec == 0 && min == 0)
       nextQuestion();
-  }
-  if(sec < 0 && min > 0)
-  {
+    else
+    {
       --min;
       sec = 59;
+    }
   }
   var min_text, sec_text;
   if(min < 10)
@@ -292,8 +292,6 @@ export function checkPoseY(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
       correct = true;
       correct_time = new Date().getTime();
     }
@@ -347,8 +345,6 @@ export function checkSwagPose(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
       correct = true;
       correct_time = new Date().getTime();
     }
@@ -360,8 +356,6 @@ export function checkSwagPose(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
       correct = true;
       correct_time = new Date().getTime();
     }
@@ -415,8 +409,6 @@ export function checkSupermanPose(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
       correct = true;
       correct_time = new Date().getTime();
     }
@@ -428,8 +420,6 @@ export function checkSupermanPose(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
       correct = true;
       correct_time = new Date().getTime();
     }
@@ -480,8 +470,6 @@ export function checkRespectPose(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
       correct = true;
       correct_time = new Date().getTime();
     }
@@ -490,8 +478,6 @@ export function checkRespectPose(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
       correct = true;
       correct_time = new Date().getTime();
     }
@@ -545,8 +531,6 @@ export function checkViolinPose(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
       correct = true;
       correct_time = new Date().getTime();
     }
@@ -599,8 +583,6 @@ export function checkModelPose(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
       correct = true;
       correct_time = new Date().getTime();
     }
@@ -611,8 +593,6 @@ export function checkModelPose(keypoints, minConfidence, ctx, scale = 1)
     {
       //drawCircle(ctx, 250 * scale, 300 * scale, 120, 'red', 30);
       drawTick(ctx, 250 * scale, 300 * scale);
-      clearInterval(intervalVal);
-      ++correct_cnt;
       correct = true;
       correct_time = new Date().getTime();
     }
@@ -622,7 +602,6 @@ export function checkModelPose(keypoints, minConfidence, ctx, scale = 1)
 export function setupQuestion()
 {
   question_cnt = 0;
-  correct_cnt = 0;
   questions = [];
   questions.push("Make a 'Y' pose");
   questions.push("Swag");
@@ -642,7 +621,7 @@ export function setupQuestion()
 export function nextQuestion()
 {
   correct = false;
-  if(question_cnt >= question_total || questions.length == 0)
+  if(questions.length == 0)
   {
     cur_question = "";
     //document.getElementById("question").innerHTML = "No more question";
@@ -661,10 +640,6 @@ export function nextQuestion()
   questions = arr1.concat(arr2);
 
   document.getElementById("question").innerHTML = "Q" + question_cnt + ": " + cur_question;
-  min = 0;
-  sec = 10;
-  document.getElementById("time_display").innerHTML = "00:10";
-  intervalVal = setInterval(decTime, 1000);
 }
 
 export function checkQuestionPose(keypoints, minConfidence, ctx, scale = 1)
