@@ -333,10 +333,24 @@ export async function bindPage() {
 
 navigator.getUserMedia = navigator.getUserMedia ||
     navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-// kick off the demo
-bindPage();
+/* info of beginning*/
+var begininfo = document.getElementById("begin-info");
+begininfo.style.display = "block";
+
+var span_info = document.getElementsByClassName("close")[0];
+span_info.onclick = function() {
+  begininfo.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == begininfo) {
+    begininfo.style.display = "none";
+  }
+}
+
 document.getElementById("startButton").onclick = startGame;
-var span = document.getElementsByClassName("close")[0];
+var span = document.getElementsByClassName("close")[1];
 span.onclick = function() {
   document.getElementById("gameOverModal").style.display='none';
 }
+
